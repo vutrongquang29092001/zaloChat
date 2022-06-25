@@ -4,13 +4,14 @@ import { auth } from '../firebase/config';
 import { Spin } from 'antd';
 
 export const AuthContext = React.createContext();
-
+// phụ trách đăng nhập chuyển hướng
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  {/**React.useEffect(() => {
+  const i = 0;
+  React.useEffect(() => {
     const unsubscibed = auth.onAuthStateChanged((user) => {
       if (user) {
         const { displayName, email, uid, photoURL } = user;
@@ -21,25 +22,27 @@ export default function AuthProvider({ children }) {
           photoURL,
         });
         setIsLoading(false);
-        navigate('/login');
+        navigate('/chatRoom');
         return;
       }
 
       // reset user info
       setUser({});
       setIsLoading(false);
-      navigate('/chatroom');
+      navigate('/login');
     });
 
     // clean function
     return () => {
       unsubscibed();
     };
-  }, [navigate]); */}
+  }, [navigate]);
+  console.log({ user })
 
   return (
     <AuthContext.Provider value={{ user }}>
-      {children}
+
+      {isLoading ? <Spin style={{ position: 'fixed', inset: 0 }} /> : children}
     </AuthContext.Provider>
   );
 }

@@ -3,6 +3,7 @@ import'firebase/compat/analytics';
 import'firebase/compat/auth';
 import'firebase/compat/firestore';
 
+// cấu hình firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDlvkDwbZjUZARPbqISdxlXO-Ujwd6KuAM",
     authDomain: "zalochat-ae61b.firebaseapp.com",
@@ -19,6 +20,13 @@ const firebaseConfig = {
 
   const auth = firebase.auth();
   const db = firebase.firestore();
+
+  auth.useEmulator('http://localhost:9099');
+
+  if(window.location.hostname === 'localhost'){
+    db.useEmulator('localhost','8080');
+  }
+
 
   export {db , auth};
   export default firebase;
