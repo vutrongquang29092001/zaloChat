@@ -9,6 +9,7 @@ import {
 import AuthProvider from './context/AuthProvider';
 import AppProvider from './context/AppProvider';
 import AddRoomModal from './Modals/AddRoomModal';
+import InviteMemberModal from './Modals/inviteMemberModal';
 function App() {
 
 
@@ -22,6 +23,7 @@ function App() {
             <AppProvider>
               <Login />
               <AddRoomModal />
+              <InviteMemberModal/>
             </AppProvider>
           </AuthProvider>
 
@@ -32,6 +34,7 @@ function App() {
             <AppProvider>
               <ChatRoom />
               <AddRoomModal />
+              <InviteMemberModal/>
             </AppProvider>
           </AuthProvider>
         } />

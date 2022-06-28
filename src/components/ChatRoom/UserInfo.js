@@ -18,18 +18,15 @@ border-bottom: 1px solid rgba(82, 38, 83);
 export default function UserInfo() {
     // lấy tên và avatar
     const {
-        user: {
-            displayName,
-            photoURL
-        }
+        user
     } = React.useContext(AuthContext);
 
     return (
         <WrapperStyled>
 
             <div>
-                <Avatar src={photoURL}>{photoURL ? ' ' : displayName?.charAt(0)?.toUpperCase()}</Avatar>
-                <Typography.Text className="username">{displayName}</Typography.Text>
+                <Avatar src={user.photoURL}>{user.photoURL ? ' ' : user.displayName?.charAt(0)?.toUpperCase()}</Avatar>
+                <Typography.Text className="username">{user.displayName}</Typography.Text>
             </div>
             <Button ghost onClick={() => auth.signOut()} >Đăng xuất</Button>
 
