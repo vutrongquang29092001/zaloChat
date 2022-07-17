@@ -7,10 +7,10 @@ const { Title } = Typography;
 export default function Login() {
 
     const fbProvider = new firebase.auth.FacebookAuthProvider();
+    const ggProvider = new firebase.auth.GoogleAuthProvider();
+    const handleLogin = async (provider) => {
 
-    const handleFbLogin = async () => {
-
-        const { additionalUserInfo, user } = await auth.signInWithPopup(fbProvider);
+        const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
         if (additionalUserInfo?.isNewUser) {
             addDocument('users', {
 
@@ -35,13 +35,13 @@ export default function Login() {
                     </Title>
                     <Button
                         style={{ width: '100%', marginBottom: 5 }}
-
+                        onClick={() => handleLogin(ggProvider)}
                     >
                         Đăng nhập bằng Google
                     </Button>
                     <Button
                         style={{ width: '100%' }}
-                        onClick={handleFbLogin} // khi click thì nhận đăng nhập từ facebook
+                        onClick={() => handleLogin(fbProvider)} // khi click thì nhận đăng nhập từ facebook
                     >
                         Đăng nhập bằng Facebook
                     </Button>

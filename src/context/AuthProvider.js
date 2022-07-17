@@ -10,7 +10,6 @@ export default function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const i = 0;
   React.useEffect(() => {
     const unsubscibed = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -37,7 +36,7 @@ export default function AuthProvider({ children }) {
       unsubscibed();
     };
   }, [navigate]);
-  console.log({ user })
+ 
 
   return (
     <AuthContext.Provider value={{ user }}>

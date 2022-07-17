@@ -18,7 +18,7 @@ border-bottom: 1px solid rgba(82, 38, 83);
 export default function UserInfo() {
     // lấy tên và avatar
     const {
-        user
+        user,
     } = React.useContext(AuthContext);
 
     return (
