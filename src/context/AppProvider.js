@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useFirestore from '../hooks/useFireStore';
 import { AuthContext } from './AuthProvider';
+import { db } from '../firebase/config';
+
 
 export const AppContext = React.createContext();
 
@@ -8,6 +10,8 @@ export default function AppProvider({ children }) {
   const [isAddRoomVisible, setIsAddRoomVisible] = useState(false);
   const [isInviteMemberVisible, setIsInviteMemberVisible] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState('');
+  const [members, setMembers] = useState([]);
+
 
   const {
     user: { uid },
@@ -23,7 +27,7 @@ export default function AppProvider({ children }) {
   }, [uid]);
 
   const rooms = useFirestore('rooms', roomsCondition);
- // lấy members có trong rooms của user
+
   const selectedRoom = React.useMemo(
     () => rooms.find((room) => room.id === selectedRoomId) || {},
     [rooms, selectedRoomId]
@@ -37,8 +41,31 @@ export default function AppProvider({ children }) {
     };
   }, [selectedRoom.members]);
 
-  const members = useFirestore('users', usersCondition);
+  // const members = useFirestore('users', usersCondition);
 
+  useEffect(() => {
+    if(selectedRoomId) {
+      db.collection("rooms").doc(selectedRoomId).onSnapshot((doc) => {
+        const memberList = []
+        const memberIds = doc.data().members
+
+        db.collection("users").get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            memberIds.forEach(member => {
+              if(doc.data().uid === member) {
+                memberList.push(doc.data())
+              }
+            })
+          });
+
+          setMembers(memberList)
+        })
+        
+      });
+    }
+  }, [selectedRoomId])
+ 
   const clearState = () => {
     setSelectedRoomId('');
     setIsAddRoomVisible(false);

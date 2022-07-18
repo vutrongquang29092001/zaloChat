@@ -25,7 +25,7 @@ function DebounceSelect({
         setFetching(false);
       });
     };
-
+  
     return debounce(loadOptions, debounceTimeout);
   }, [debounceTimeout, fetchOptions,curMembers]);
 
@@ -91,11 +91,11 @@ export default function InviteMemberModal() {
 
     // update members in current room
     const roomRef = db.collection('rooms').doc(selectedRoomId);
-
+    // 
     roomRef.update({
       members: [...selectedRoom.members, ...value.map((val) => val.value)],
     });
-
+  
     setIsInviteMemberVisible(false);
   };
 

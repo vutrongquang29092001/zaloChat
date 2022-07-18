@@ -2,7 +2,8 @@ import { UserAddOutlined } from '@ant-design/icons';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Tooltip, Avatar, Form, Input, Alert } from 'antd';
-import Message from './Message';
+import FriendMessages from './FriendMessages';
+import UserMessages from './UserMessages';
 import { AppContext } from '../../context/AppProvider';
 import { addDocument } from '../../firebase/services';
 import { AuthContext } from '../../context/AuthProvider';
@@ -84,7 +85,7 @@ export default function ChatWindow() {
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-
+  
   const handleOnSubmit = () => {
     addDocument('messages', {
       text: inputValue,
@@ -103,7 +104,7 @@ export default function ChatWindow() {
       });
     }
   };
-  members.map((member) => (console.log(member.displayName)));
+
   const condition = React.useMemo(
     () => ({
       fieldName: 'roomId',
@@ -115,13 +116,26 @@ export default function ChatWindow() {
 
   const messages = useFireStore('messages', condition);
 
+ 
+  const messages2 = messages.map((message) => {
+
+    if (message.uid === uid) {
+      message.role = "me";
+    } else {
+      message.role = "friend";
+    }
+
+    return message;
+  })
   useEffect(() => {
+
     // scroll to bottom after message changed
     if (messageListRef?.current) {
       messageListRef.current.scrollTop =
         messageListRef.current.scrollHeight + 50;
     }
   }, [messages]);
+
   
 
   return (
@@ -144,13 +158,13 @@ export default function ChatWindow() {
                 Mời
               </Button>
               <Avatar.Group size='small' maxCount={2}>
-                {members.map((member) => (
+                {members?.length && members.map((member) => (
                   <Tooltip title={member.displayName} key={member.id}>
                     <Avatar src={member.photoURL}>
                       {member.photoURL
                         ? ''
                         : member.displayName?.charAt(0)?.toUpperCase()}
-                       
+
                     </Avatar>
                   </Tooltip>
                 ))}
@@ -159,15 +173,28 @@ export default function ChatWindow() {
           </HeaderStyled>
           <ContentStyled>
             <MessageListStyled ref={messageListRef}>
-              {messages.map((mes) => (
-                <Message
-                  key={mes.id}
-                  text={mes.text}
-                  photoURL={mes.photoURL}
-                  displayName={mes.displayName}
-                  createdAt={mes.createdAt}
-                />
-              ))}
+              {messages.map((mes) => {
+                if (mes.role === "me") {
+                  return (<UserMessages
+                    key={mes.id}
+                    text={mes.text}
+                    photoURL={mes.photoURL}
+                    displayName={mes.displayName}
+                    createdAt={mes.createdAt}
+
+                  />);
+                }
+                return (
+                  <FriendMessages
+                    key={mes.id}
+                    text={mes.text}
+                    photoURL={mes.photoURL}
+                    displayName={mes.displayName}
+                    createdAt={mes.createdAt}
+
+                  />
+                )
+              })}
             </MessageListStyled>
             <FormStyled form={form}>
               <Form.Item name='message'>
